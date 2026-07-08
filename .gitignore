@@ -1,0 +1,44 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+*.log.*
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build / runtime artifacts
+dist/
+build/
+coverage/
+.tmp/
+.cache/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+
+# Database files (if you generate local SQLite or dump files)
+*.sqlite
+*.db
+*.sql
+
+# Misc
+*.tgz
+*.tar.gz
