@@ -1,5 +1,5 @@
-// import dbConnection from '../../config/dbConnection.js';  // ✅ import dbConnection
 import dbConnection from '../../config/dbConnection.js';
+
 const ChartService = {
   // Voltage history
   getVoltageHistory: async (vehicleId, limit = 50) => {
@@ -44,6 +44,32 @@ const ChartService = {
   getSpeedHistory: async (vehicleId, limit = 50) => {
     const sql = `
       SELECT timestamp, speed 
+      FROM vehicle_telemetry 
+      WHERE vehicle_id = ? 
+      ORDER BY timestamp DESC 
+      LIMIT ?
+    `;
+    const [rows] = await dbConnection.query(sql, [vehicleId, limit]);
+    return rows;
+  },
+
+  // SOC history
+  getSocHistory: async (vehicleId, limit = 50) => {
+    const sql = `
+      SELECT timestamp, soc 
+      FROM vehicle_telemetry 
+      WHERE vehicle_id = ? 
+      ORDER BY timestamp DESC 
+      LIMIT ?
+    `;
+    const [rows] = await dbConnection.query(sql, [vehicleId, limit]);
+    return rows;
+  },
+
+  // Battery temperature history
+  getBatteryTempHistory: async (vehicleId, limit = 50) => {
+    const sql = `
+      SELECT timestamp, battery_temp 
       FROM vehicle_telemetry 
       WHERE vehicle_id = ? 
       ORDER BY timestamp DESC 

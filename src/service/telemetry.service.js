@@ -10,10 +10,8 @@ const TelemetryService = {
     const vehicle = await VehicleTable.getVehicleByVin(payload.vehicleId);
 
     // 3. Calculate odometer increment from speed
-    // Assuming telemetry interval = 30 seconds = 0.0083 hours
     const intervalHours = 30 / 3600; // 30 seconds in hours
     const distanceIncrement = (payload.metrics.speed || 0) * intervalHours;
-
     const newOdometer = (vehicle?.odometer || 0) + Math.round(distanceIncrement);
 
     // 4. Update vehicle record
@@ -26,12 +24,19 @@ const TelemetryService = {
 
     // 5. Risk calculation
     let operationalRiskFactor = 5;
-    if (payload.metrics.batteryTemp > 60) {
-      operationalRiskFactor += 13;
-    }
+    if (payload.metrics.batteryTemp > 60) operationalRiskFactor += 13;
+    if (payload.metrics.motorTemp > 90) operationalRiskFactor += 10;
+    if (payload.metadata.Brake_Condition === 0) operationalRiskFactor += 7;
 
+    // 6. Return full payload + insights
     return {
       referenceId: writeResult.insertId,
+      vehicleId: payload.vehicleId,
+      timestamp: payload.timestamp,
+      metrics: payload.metrics,
+      location: payload.location,
+      metadata: payload.metadata,
+      odometer: newOdometer,
       calculatedRisk: `${operationalRiskFactor}%`,
       systemStatus: operationalRiskFactor > 15 ? 'Low Risk Warning' : 'Healthy'
     };

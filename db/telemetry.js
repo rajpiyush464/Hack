@@ -21,6 +21,12 @@ const TelemetryTable = {
         maintenance_history VARCHAR(100) NOT NULL,
         fault_code VARCHAR(20) NOT NULL,
         failure_label VARCHAR(50) NOT NULL,
+        vehicle_type INT,
+        route_info INT,
+        weather_conditions INT,
+        road_conditions INT,
+        maintenance_type INT,
+        brake_condition INT,
         INDEX idx_vehicle (vehicle_id),
         INDEX idx_timestamp (timestamp)
       );
@@ -30,14 +36,17 @@ const TelemetryTable = {
   saveTelemetry: async (data) => {
     const sql = `
       INSERT INTO vehicle_telemetry 
-      (vehicle_id, timestamp, battery_temp, motor_temp, coolant_temp, voltage, current, rpm, speed, vibration, soc, gps_lat, gps_lon, maintenance_history, fault_code, failure_label)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (vehicle_id, timestamp, battery_temp, motor_temp, coolant_temp, voltage, current, rpm, speed, vibration, soc, gps_lat, gps_lon, maintenance_history, fault_code, failure_label,
+       vehicle_type, route_info, weather_conditions, road_conditions, maintenance_type, brake_condition)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const params = [
       data.vehicleId, data.timestamp, data.metrics.batteryTemp, data.metrics.motorTemp,
       data.metrics.coolantTemp, data.metrics.voltage, data.metrics.current, data.metrics.rpm,
       data.metrics.speed, data.metrics.vibration, data.metrics.soc, data.location.gpsLat,
-      data.location.gpsLon, data.metadata.maintenanceHistory, data.metadata.faultCode, data.metadata.failureLabel
+      data.location.gpsLon, data.metadata.maintenanceHistory, data.metadata.faultCode, data.metadata.failureLabel,
+      data.metadata.Vehicle_Type, data.metadata.Route_Info, data.metadata.Weather_Conditions,
+      data.metadata.Road_Conditions, data.metadata.Maintenance_Type, data.metadata.Brake_Condition
     ];
     const [result] = await dbConnection.query(sql, params);
     return result;
