@@ -3,6 +3,9 @@ import ModelOutputTable from '../../db/model_output.js';
 
 const ModelService = {
   processTelemetryForPrediction: async (payload) => {
+    console.log("\n========== TELEMETRY PAYLOAD ==========");
+    console.log(JSON.stringify(payload, null, 2));
+    console.log("=======================================\n");
     return new Promise((resolve, reject) => {
       const pythonPath =
   'C:\\Users\\hp\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe';
