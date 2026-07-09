@@ -1,4 +1,4 @@
-import express from 'express';
+ import express from 'express';
 import ChartService from '../service/chart.service.js';
 
 const router = express.Router();
@@ -40,6 +40,26 @@ router.get('/:vehicleId/speed', async (req, res) => {
     res.json({ success: true, speedHistory: data });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch speed history' });
+  }
+});
+
+// SOC chart data
+router.get('/:vehicleId/soc', async (req, res) => {
+  try {
+    const data = await ChartService.getSocHistory(req.params.vehicleId, 50);
+    res.json({ success: true, socHistory: data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch SOC history' });
+  }
+});
+
+// Battery temperature chart data
+router.get('/:vehicleId/battery-temp', async (req, res) => {
+  try {
+    const data = await ChartService.getBatteryTempHistory(req.params.vehicleId, 50);
+    res.json({ success: true, batteryTempHistory: data });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch battery temperature history' });
   }
 });
 

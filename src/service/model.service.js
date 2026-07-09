@@ -4,7 +4,10 @@ import ModelOutputTable from '../../db/model_output.js';
 const ModelService = {
   processTelemetryForPrediction: async (payload) => {
     return new Promise((resolve, reject) => {
-      const py = spawn('python', ['ml_model/predict.py']);
+      const pythonPath =
+  'C:\\Users\\hp\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe';
+
+const py = spawn(pythonPath, ['ml_model/predict.py']);
       let dataString = '';
 
       py.stdout.on('data', (data) => {
