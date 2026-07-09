@@ -410,10 +410,9 @@ async function transmitFrame() {
       payload
     );
 
-    console.log(
-      "Prediction :",
-      response.data.prediction.probability
-    );
+    console.log("\n========== FULL RESPONSE ==========");
+console.log(JSON.stringify(response.data, null, 2));
+console.log("===================================\n");
 
     console.log(
       "Vehicle Status :",
@@ -421,6 +420,7 @@ async function transmitFrame() {
     );
 
   }
+  
   catch(err){
 
     if(err.response){

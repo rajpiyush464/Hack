@@ -1,0 +1,6 @@
+{
+    "healthy": 30,
+    "warning": 70,
+    "critical": 90,
+    "predictionThreshold": 50
+}

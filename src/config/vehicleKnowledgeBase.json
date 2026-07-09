@@ -1,0 +1,44 @@
+{
+    "Battery": {
+        "warningHealth": 60,
+        "criticalHealth": 40,
+        "failureType": "Battery Degradation",
+        "recommendation": "Inspect the battery pack, charging circuit, BMS, and cell balancing. Replace degraded battery modules if necessary."
+    },
+
+    "Motor": {
+        "warningTemperature": 80,
+        "criticalTemperature": 100,
+
+        "warningVibration": 5,
+        "criticalVibration": 10,
+
+        "failureType": "Motor Overheating",
+
+        "recommendation": "Inspect motor bearings, cooling system, rotor alignment, and electrical insulation."
+    },
+
+    "Brake": {
+        "warningRisk": 60,
+        "criticalRisk": 85,
+
+        "failureType": "Brake System Wear",
+
+        "recommendation": "Inspect brake pads, brake fluid, calipers, and regenerative braking performance."
+    },
+
+    "Electrical": {
+        "warningDTC": 2,
+        "criticalDTC": 5,
+
+        "failureType": "Electrical System Fault",
+
+        "recommendation": "Run ECU diagnostics, inspect vehicle wiring, connectors, and power electronics."
+    },
+
+    "General": {
+        "failureType": "General Vehicle Degradation",
+
+        "recommendation": "Continue monitoring vehicle telemetry and schedule preventive maintenance."
+    }
+}
