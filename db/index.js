@@ -2,6 +2,8 @@ import dbConnection from '../config/dbConnection.js';
 import TelemetryTable from './telemetry.js';
 import VehicleTable from './vehicle.js';
 import ModelOutputTable from './model_output.js';
+import MasterOutputTable from './master_output.js';
+
 
 export async function ensureDatabaseSchema() {
   try {
@@ -10,6 +12,7 @@ export async function ensureDatabaseSchema() {
     await dbConnection.query(TelemetryTable.getSchemaQuery());
     await dbConnection.query(VehicleTable.getSchemaQuery());
     await dbConnection.query(ModelOutputTable.getSchemaQuery());
+    await dbConnection.query(MasterOutputTable.getSchemaQuery());  // ✅ new line
 
     console.log('✔ MySQL schema entities initialized inside [backend] space.');
   } catch (error) {
@@ -21,7 +24,10 @@ export async function ensureDatabaseSchema() {
 const dbOrchestrator = {
   ensureDatabaseSchema,
   Telemetry: TelemetryTable,
-  Vehicle: VehicleTable
+  Vehicle: VehicleTable,
+  ModelOutput: ModelOutputTable,
+  MasterOutput: MasterOutputTable   // ✅ new entry
 };
+
 
 export default dbOrchestrator;

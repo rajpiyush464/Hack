@@ -1,6 +1,7 @@
 import { spawn } from "child_process";
 
 import ModelOutputTable from "../../db/model_output.js";
+import MasterOutputTable from "../../db/master_output.js";
 
 import RuleEngine from "../ai/ruleEngine.js";
 import RCAService from "../ai/rca.service.js";
@@ -15,8 +16,7 @@ const ModelService = {
 
     return new Promise((resolve, reject) => {
 
-      const pythonPath =
-        "C:\\Users\\hp\\Desktop\\EV-Hackathon\\venv\\Scripts\\python.exe";
+     const pythonPath = 'C:\\Users\\hp\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe';
 
       const py = spawn(pythonPath, ["ml_model/predict.py"]);
 
@@ -130,6 +130,30 @@ const ModelService = {
 
           console.log("\n========== FINAL RESPONSE ==========");
           console.log(JSON.stringify(finalResponse, null, 2));
+        // ✅ Save into master table
+// ✅ Save complete telemetry + prediction into master table
+
+await MasterOutputTable.saveOutput({
+
+  insights: {
+    vehicleId: payload.vehicleId,
+    timestamp: payload.timestamp,
+
+    metrics: payload.metrics,
+
+    location: payload.location,
+
+    metadata: payload.metadata,
+
+    odometer: payload.odometer,
+    calculatedRisk: payload.calculatedRisk,
+    systemStatus: payload.systemStatus
+  },
+
+
+  prediction: finalResponse
+
+});
 
           resolve(finalResponse);
 
