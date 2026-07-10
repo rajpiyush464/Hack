@@ -4,6 +4,10 @@ import vehicleRoutes from './vehicle.routes.js';
 import chartRoutes from './chart.routes.js';
 import modelRoutes from './model.routes.js';
 import masterRoutes from './master.routes.js';   // ✅ add this
+import alertsRouter from "./alerts.js";
+
+
+
 
 const router = express.Router();
 
@@ -12,5 +16,6 @@ router.use('/telemetry', telemetryRoutes);
 router.use('/vehicle', vehicleRoutes);
 router.use('/model', modelRoutes);
 router.use('/master', masterRoutes);   // ✅ add this
+router.use("/vehiclealert", alertsRouter);
 
 export default router;

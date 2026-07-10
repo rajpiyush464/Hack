@@ -1,4 +1,6 @@
 import VehicleTable from '../../db/vehicle.js';
+import MasterOutputTable from '../../db/master_output.js';
+
 
 const VehicleService = {
   // Register a new vehicle
@@ -11,14 +13,16 @@ const VehicleService = {
     };
   },
 
-  // Fetch vehicle details by VIN
-  fetchVehicle: async (vin) => {
-    const vehicle = await VehicleTable.getVehicleByVin(vin);
-    if (!vehicle) {
-      throw new Error('Vehicle not found');
-    }
-    return vehicle;
-  },
+ 
+ // Fetch latest master record by VIN
+fetchVehicle: async (vin) => {
+  const record = await MasterOutputTable.getLatestOutput(vin);
+  if (!record) {
+    throw new Error('Vehicle not found in master table');
+  }
+  return record;
+},
+
 
   // Update vehicle record
   updateVehicleInfo: async (vin, updates) => {
