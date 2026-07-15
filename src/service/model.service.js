@@ -1,15 +1,12 @@
 import { spawn } from "child_process";
-
 import ModelOutputTable from "../../db/model_output.js";
-import MasterOutputTable from "../../db/master_output.js";
-
+import MasterOutputTable from "../../db/master_output.js";   // to store all the data telemetory+rca+model
 import RuleEngine from "../ai/ruleEngine.js";
 import RCAService from "../ai/rca.service.js";
+import AlertService from "../service/alert.service.js";
 
 const ModelService = {
-
   processTelemetryForPrediction: async (payload) => {
-
     console.log("\n========== TELEMETRY PAYLOAD ==========");
     console.log(JSON.stringify(payload, null, 2));
     console.log("=======================================\n");
@@ -154,7 +151,11 @@ await MasterOutputTable.saveOutput({
   prediction: finalResponse
 
 });
-
+try {
+  await AlertService.generateFromRCA(payload.vehicleId, rca);
+} catch (err) {
+  console.error("Error creating alert from RCA:", err.message);
+}
           resolve(finalResponse);
 
         }
