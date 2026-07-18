@@ -42,6 +42,16 @@ const AlertService = {
     }
   },
 
+  /** Fetch alerts by vehicle ID */
+  async listByVehicle(vehicleId) {
+    try {
+      return await AlertsTable.getAlertsByVehicle(vehicleId);
+    } catch (err) {
+      console.error(`Error listing alerts for vehicle ${vehicleId}:`, err.message);
+      throw err;
+    }
+  },
+
   /** Fetch all active alerts */
   async listActive() {
     try {

@@ -71,6 +71,17 @@ const AlertsTable = {
       throw err;
     }
   },
+  // Get alerts by vehicle ID
+  async getAlertsByVehicle(vehicleId) {
+    try {
+      const sql = `SELECT * FROM alerts WHERE vehicle_id = ? ORDER BY created_at DESC`;
+      const [rows] = await dbConnection.query(sql, [vehicleId]);
+      return rows;
+    } catch (err) {
+      console.error(`Error fetching alerts for vehicle ${vehicleId}:`, err.message);
+      throw err;
+    }
+  },
 
   // Get alert by ID
   async getAlertById(id) {

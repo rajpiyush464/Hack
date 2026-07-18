@@ -6,6 +6,7 @@ import { WebSocketServer } from 'ws'; // WebSocket library
 import { initializePool } from './config/dbConnection.js';
 import { ensureDatabaseSchema } from './db/index.js';
 import coreRoutes from './src/routes/routes.js';
+// import { seedAlerts } from './seed/alert.seed.js';
 
 dotenv.config();
 
@@ -17,18 +18,14 @@ app.use(express.json());
 app.use('/api', coreRoutes);
 
 const RUNTIME_PORT = process.env.PORT || 5000;
-
-// Create HTTP server so WebSocket can attach
 const server = http.createServer(app);
-
-// Initialize WebSocket server
 const wss = new WebSocketServer({ server });
 
 // Handle WebSocket connections
 wss.on('connection', (ws) => {
   console.log('🔌 Client connected to telemetry WebSocket');
 
-  // Example: push dummy telemetry every 5 seconds
+  // Push mock telemetry every 5 seconds
   const interval = setInterval(() => {
     const telemetry = {
       timestamp: new Date().toISOString(),
@@ -46,16 +43,32 @@ wss.on('connection', (ws) => {
   });
 });
 
-server.listen(RUNTIME_PORT, async () => {
-  console.log(`====================================================`);
-  console.log(`🚀 EV Platform Gateway Engine Online | Routing via Port: ${RUNTIME_PORT}`);
-  console.log(`====================================================`);
+// 🧠 SEQUENTIAL BOOTSTRAP ENGINE
+// This guarantees the database pool initializes completely BEFORE the ports open!
+async function bootServer() {
   try {
+    console.log('⏳ Initializing Core Stack Components...');
+    
+    // 1. Core Databases initialize first
     await initializePool();
+    console.log('✔ MySQL connection pool initialized.');
+    
     await ensureDatabaseSchema();
-    console.log('✔ Ingestion network sockets mapping established.');
+    console.log('✔ Relational database tables validated.');
+
+    // 2. Sockets and Routing Engine listen AFTER dependencies are ready
+    server.listen(RUNTIME_PORT, () => {
+      console.log(`====================================================`);
+      console.log(`🚀 EV Platform Gateway Engine Online | Routing via Port: ${RUNTIME_PORT}`);
+      console.log(`✔ Ingestion network sockets mapping established.`);
+      console.log(`====================================================`);
+    });
+
   } catch (error) {
     console.error('❌ Fatal Core Stack Initialization Abort:', error.message);
     process.exit(1);
   }
-});
+}
+
+// Fire up the engine safely
+bootServer();

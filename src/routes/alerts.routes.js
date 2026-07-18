@@ -49,10 +49,16 @@ router.post('/alerts/:id/resolve', async (req, res) => {
   try {
     const { id } = req.params;
     const success = await AlertService.resolve(id);
+    
     if (!success) {
       return res.status(404).json({ error: "Alert not found or already resolved" });
     }
-    res.json({ success: true });
+
+    // ⚡ ADD THIS: Fetch the updated alert data from the database
+    const updatedAlert = await AlertService.getById(id);
+    
+    // 📊 Return BOTH success and the updated alert object
+    res.json({ success: true, alert: updatedAlert });
   } catch (err) {
     console.error(`Error resolving alert ${req.params.id}:`, err.message);
     res.status(500).json({ error: "Failed to resolve alert" });
@@ -74,6 +80,24 @@ router.post('/alerts/create', async (req, res) => {
   } catch (err) {
     console.error("Error creating alert:", err.message);
     res.status(500).json({ error: "Failed to create alert" });
+  }
+});
+
+
+
+/**
+ * GET /api/alerts/vehicle/:vehicleId
+ * ----------------------------------
+ * Fetch all alerts for a given vehicle.
+ */
+router.get('/alerts/vehicle/:vehicleId', async (req, res) => {
+  try {
+    const { vehicleId } = req.params;
+    const alerts = await AlertService.listByVehicle(vehicleId);
+    res.json({ alerts });
+  } catch (err) {
+    console.error(`Error fetching alerts for vehicle ${req.params.vehicleId}:`, err.message);
+    res.status(500).json({ error: "Failed to fetch alerts" });
   }
 });
 
